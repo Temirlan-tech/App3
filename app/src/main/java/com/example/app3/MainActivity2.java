@@ -1,31 +1,24 @@
 package com.example.app3;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 public class MainActivity2 extends AppCompatActivity {
 
     private ImageView myImage;
     private EditText editText;
     private static int REQUEST_QODE = 100;
-    public static final String EXTRA_TEXT1 = "text";
-    public static final String EXTRA_IMAGE = "image";
+    public static final String EXTRA_TEXT1 = "text2";
     private static final int IMAGE_PICK_CODE = 1000;
     public Uri textImage;
+    public String imageText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +28,8 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     private void init() {
+        editText = findViewById(R.id.etText);
+
         myImage = findViewById(R.id.image2);
         myImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,12 +42,13 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     public void openFirstActivity(View view) {
-        editText = findViewById(R.id.etText);
         String messageText = editText.getText().toString();
-        Intent intent = new Intent(MainActivity2.this, MainActivity.class);
+        Intent intent = new Intent();
         intent.putExtra(EXTRA_TEXT1, messageText);
-        intent.setData(textImage);
-        startActivity(intent);
+        Log.d("TAG", "openFirstActivity: "+messageText);
+        intent.putExtra("text", imageText);
+        setResult(RESULT_OK,intent);
+        finish();
     }
 
     @Override
@@ -61,7 +57,7 @@ public class MainActivity2 extends AppCompatActivity {
         if (requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK && imageReturnedIntent != null) {
             Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
                 final Uri imageUri = imageReturnedIntent.getData();
-                textImage = imageUri;
+                imageText = imageUri.toString();
                 myImage.setImageURI(imageUri);
         }
     }
